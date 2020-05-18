@@ -7,6 +7,8 @@ import pl.wuniszewski.driver.dto.AdviceDto;
 import pl.wuniszewski.driver.entity.Advice;
 import pl.wuniszewski.driver.repository.AdviceRepository;
 
+import java.util.List;
+
 @Service
 public class AdviceService {
     private AdviceRepository repository;
@@ -18,6 +20,9 @@ public class AdviceService {
     }
     public Advice findById(Long id) {
         return repository.getOne(id);
+    }
+    public List<Advice> getAllAdvices () {
+        return repository.findAll();
     }
     public Advice create (Advice advice) {
         return repository.save(advice);

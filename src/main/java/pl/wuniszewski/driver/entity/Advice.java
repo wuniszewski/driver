@@ -15,7 +15,7 @@ public class Advice {
     private Long id;
     private String name;
     private String description;
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Tag> tags;
     @OneToMany(mappedBy = "advice", fetch = FetchType.EAGER)
     private Set<Exercise> exercises;

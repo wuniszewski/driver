@@ -1,13 +1,16 @@
 package pl.wuniszewski.driver.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import pl.wuniszewski.driver.dto.AdviceDto;
 import pl.wuniszewski.driver.entity.Advice;
 import pl.wuniszewski.driver.service.AdviceService;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,8 +24,13 @@ public class AdviceController {
     }
     @GetMapping("/{id}")
     public AdviceDto getAdviceById (@PathVariable(name = "id") Long id) {
-        Advice advice = adviceService.findById(id);
-        AdviceDto dto = adviceService.convertToDto(advice);
+        AdviceDto dto;
+        try {
+            Advice advice = adviceService.findById(id);
+            dto = adviceService.convertToDto(advice);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Couldn't find resource with given id");
+        }
         return dto;
     }
     @GetMapping
@@ -48,6 +56,15 @@ public class AdviceController {
         toUpdate.setId(id);
         Advice updated =adviceService.update(toUpdate);
         return adviceService.convertToDto(updated);
+    }
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteById (@PathVariable(name = "id") Long id) {
+        try {
+            adviceService.delete(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Given not existing id");
+        }
     }
 
 }

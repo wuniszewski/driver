@@ -10,6 +10,6 @@ public class ExerciseDto {
     private Long id;
     private String question;
     private AdviceDto advice;
-    private Set<AnswerDto> options;
+    private Set<AnswerDto> answerss;
 
 }

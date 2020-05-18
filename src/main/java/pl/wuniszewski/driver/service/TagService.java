@@ -7,6 +7,8 @@ import pl.wuniszewski.driver.dto.TagDto;
 import pl.wuniszewski.driver.entity.Tag;
 import pl.wuniszewski.driver.repository.TagRepository;
 
+import java.util.List;
+
 @Service
 public class TagService {
     private TagRepository repository;
@@ -34,5 +36,11 @@ public class TagService {
     }
     public Tag convertToEntity (TagDto dto) {
         return modelMapper.map(dto, Tag.class);
+    }
+    public Tag getTagByName (String name) {
+        return repository.getTagByName(name);
+    }
+    public List<Tag> getAllTags () {
+        return repository.findAll();
     }
 }

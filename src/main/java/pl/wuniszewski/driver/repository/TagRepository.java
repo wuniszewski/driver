@@ -4,4 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import pl.wuniszewski.driver.entity.Tag;
 
 public interface TagRepository extends JpaRepository<Tag, Long> {
+
+    public Tag getTagByName (String name);
 }

@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
 
-@Entity
+@Entity(name = "advices")
 @Getter @Setter
 public class Advice {
     @Id
@@ -15,9 +15,9 @@ public class Advice {
     private Long id;
     private String name;
     private String description;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Tag> tags;
-    @OneToMany
+    @OneToMany(mappedBy = "advice", fetch = FetchType.EAGER)
     private Set<Exercise> exercises;
     private Integer likes;
 }

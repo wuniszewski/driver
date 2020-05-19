@@ -1,9 +1,8 @@
 package pl.wuniszewski.driver.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import pl.wuniszewski.driver.converter.TagConverter;
 import pl.wuniszewski.driver.dto.TagDto;
 import pl.wuniszewski.driver.entity.Tag;
 import pl.wuniszewski.driver.service.TagService;
@@ -16,25 +15,27 @@ import java.util.stream.Collectors;
 @RequestMapping("/tags")
 public class TagController {
     private TagService tagService;
+    private TagConverter tagConverter;
     @Autowired
-    public TagController(TagService tagService) {
+    public TagController(TagService tagService, TagConverter tagConverter) {
         this.tagService = tagService;
+        this.tagConverter = tagConverter;
     }
     @GetMapping("/{name}")
     public TagDto getTagByName (@PathVariable(name = "name") String name) throws EntityNotFoundException{
         Tag entity = tagService.getTagByName(name);
-        return tagService.convertToDto(entity);
+        return tagConverter.convertToDto(entity);
     }
     @GetMapping
     public List<TagDto> getAllTags () {
         return tagService.getAllTags().stream()
-                .map(tagService::convertToDto)
+                .map(tagConverter::convertToDto)
                 .collect(Collectors.toList());
     }
     @PostMapping
     public TagDto createNewTag (@RequestBody TagDto tagDto) {
-        Tag newTag = tagService.convertToEntity(tagDto);
+        Tag newTag = tagConverter.convertToEntity(tagDto);
         Tag savedTag = tagService.create(newTag);
-        return tagService.convertToDto(savedTag);
+        return tagConverter.convertToDto(savedTag);
     }
 }

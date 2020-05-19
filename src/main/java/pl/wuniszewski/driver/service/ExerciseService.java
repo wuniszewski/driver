@@ -29,10 +29,4 @@ public class ExerciseService {
         repository.deleteById(id);
         return repository.getOne(id) == null ? true : false;
     }
-    public ExerciseDto convertToDto (Exercise entity) {
-        return modelMapper.map(entity, ExerciseDto.class);
-    }
-    public Exercise convertToEntity (ExerciseDto dto) {
-        return modelMapper.map(dto, Exercise.class);
-    }
 }

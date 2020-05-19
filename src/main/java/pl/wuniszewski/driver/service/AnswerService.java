@@ -29,10 +29,4 @@ public class AnswerService {
         repository.deleteById(id);
         return repository.getOne(id) == null ? true : false;
     }
-    public AnswerDto convertToDto (Answer entity) {
-        return modelMapper.map(entity, AnswerDto.class);
-    }
-    public Answer convertToEntity (AnswerDto dto) {
-        return modelMapper.map(dto, Answer.class);
-    }
 }

@@ -48,10 +48,4 @@ public class AdviceService {
         }
         return repository.findById(id).isEmpty();
     }
-    public AdviceDto convertToDto (Advice entity) {
-        return modelMapper.map(entity, AdviceDto.class);
-    }
-    public Advice convertToEntity (AdviceDto dto) {
-        return modelMapper.map(dto, Advice.class);
-    }
 }

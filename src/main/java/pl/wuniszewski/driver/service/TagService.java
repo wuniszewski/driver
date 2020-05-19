@@ -35,14 +35,9 @@ public class TagService {
         repository.deleteById(id);
         return repository.findById(id).isEmpty();
     }
-    public TagDto convertToDto (Tag entity) {
-        return modelMapper.map(entity, TagDto.class);
-    }
-    public Tag convertToEntity (TagDto dto) {
-        return modelMapper.map(dto, Tag.class);
-    }
     public Tag getTagByName (String name) throws ResponseStatusException {
-        return repository.getTagByName(name).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "This tag doesn't exist"));
+        return repository.getTagByName(name).orElseThrow(()->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "This tag doesn't exist"));
     }
     public List<Tag> getAllTags () {
         return repository.findAll();

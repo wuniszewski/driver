@@ -18,27 +18,26 @@ import java.util.stream.Collectors;
 @RequestMapping("/advices")
 public class AdviceController {
     private AdviceService adviceService;
+
     @Autowired
     public AdviceController(AdviceService adviceService) {
         this.adviceService = adviceService;
     }
+
     @GetMapping("/{id}")
-    public AdviceDto getAdviceById (@PathVariable(name = "id") Long id) {
-        AdviceDto dto;
-        try {
-            Advice advice = adviceService.findById(id);
-            dto = adviceService.convertToDto(advice);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Couldn't find resource with given id");
-        }
+    public AdviceDto getAdviceById(@PathVariable(name = "id") Long id) throws ResponseStatusException {
+        Advice advice = adviceService.findById(id);
+        AdviceDto dto = adviceService.convertToDto(advice);
         return dto;
     }
+
     @GetMapping
-    public List<AdviceDto> getAllAdvices () {
+    public List<AdviceDto> getAllAdvices() {
         return adviceService.getAllAdvices().stream()
                 .map(adviceService::convertToDto)
                 .collect(Collectors.toList());
     }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public AdviceDto createAdvice(@RequestBody AdviceDto dto) {
@@ -46,25 +45,23 @@ public class AdviceController {
         Advice created = adviceService.create(advice);
         return adviceService.convertToDto(created);
     }
+
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public AdviceDto updateWholeAdvice (@PathVariable(name = "id") Long id, @RequestBody AdviceDto adviceDto) {
+    public AdviceDto updateWholeAdvice(@PathVariable(name = "id") Long id, @RequestBody AdviceDto adviceDto) {
         if (id == null) {
-            return null;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No id given");
         }
         Advice toUpdate = adviceService.convertToEntity(adviceDto);
         toUpdate.setId(id);
-        Advice updated =adviceService.update(toUpdate);
+        Advice updated = adviceService.update(toUpdate);
         return adviceService.convertToDto(updated);
     }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteById (@PathVariable(name = "id") Long id) {
-        try {
-            adviceService.delete(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Given not existing id");
-        }
+    public void deleteById(@PathVariable(name = "id") Long id) throws ResponseStatusException {
+        adviceService.delete(id);
     }
 
 }

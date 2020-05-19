@@ -2,11 +2,14 @@ package pl.wuniszewski.driver.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import pl.wuniszewski.driver.dto.TagDto;
 import pl.wuniszewski.driver.entity.Tag;
 import pl.wuniszewski.driver.repository.TagRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -18,8 +21,9 @@ public class TagService {
         this.repository = repository;
         this.modelMapper = modelMapper;
     }
-    public Tag findById(Long id) {
-        return repository.getOne(id);
+    public Tag findById(Long id) throws ResponseStatusException {
+        return repository.findById(id).orElseThrow(()->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Couldn't find resource with given id"));
     }
     public Tag create (Tag tag) {
         return repository.save(tag);
@@ -29,7 +33,7 @@ public class TagService {
     }
     public boolean delete (Long id) {
         repository.deleteById(id);
-        return repository.getOne(id) == null ? true : false;
+        return repository.findById(id).isEmpty();
     }
     public TagDto convertToDto (Tag entity) {
         return modelMapper.map(entity, TagDto.class);
@@ -37,8 +41,8 @@ public class TagService {
     public Tag convertToEntity (TagDto dto) {
         return modelMapper.map(dto, Tag.class);
     }
-    public Tag getTagByName (String name) {
-        return repository.getTagByName(name);
+    public Tag getTagByName (String name) throws ResponseStatusException {
+        return repository.getTagByName(name).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "This tag doesn't exist"));
     }
     public List<Tag> getAllTags () {
         return repository.findAll();

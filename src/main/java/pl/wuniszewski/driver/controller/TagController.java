@@ -20,23 +20,17 @@ public class TagController {
     public TagController(TagService tagService) {
         this.tagService = tagService;
     }
-    @GetMapping
-    public TagDto getTagByName (@RequestParam(name = "name") String name) {
-        TagDto tagDto;
-        try {
-            Tag entity = tagService.getTagByName(name);
-            tagDto = tagService.convertToDto(entity);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This tag doesn't exist");
-        }
-        return tagDto;
+    @GetMapping("/{name}")
+    public TagDto getTagByName (@PathVariable(name = "name") String name) throws EntityNotFoundException{
+        Tag entity = tagService.getTagByName(name);
+        return tagService.convertToDto(entity);
     }
-//    @GetMapping
-//    public List<TagDto> getAllTags () {
-//        return tagService.getAllTags().stream()
-//                .map(tagService::convertToDto)
-//                .collect(Collectors.toList());
-//    }
+    @GetMapping
+    public List<TagDto> getAllTags () {
+        return tagService.getAllTags().stream()
+                .map(tagService::convertToDto)
+                .collect(Collectors.toList());
+    }
     @PostMapping
     public TagDto createNewTag (@RequestBody TagDto tagDto) {
         Tag newTag = tagService.convertToEntity(tagDto);

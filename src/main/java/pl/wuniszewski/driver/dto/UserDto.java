@@ -3,11 +3,9 @@ package pl.wuniszewski.driver.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
-
 @Getter @Setter
-public class ExerciseDto {
+public class UserDto {
     private Long id;
-    private String question;
-    private Set<AnswerDto> answers;
+    private String login;
+    private String password;
 }
